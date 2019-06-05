@@ -7,6 +7,7 @@ def func(*args, **kwargs):
 
     for name, arg in kwargs.items():
          print(name, arg)
+    print('\n')
 
 
 def modified_func(func, *fixated_args, **fixated_kwargs):
@@ -19,11 +20,13 @@ def modified_func(func, *fixated_args, **fixated_kwargs):
             return func(*fixated_args, **fixated_kwargs)
 
         union_args = fixated_args
+        union_kwargs = fixated_kwargs.copy()
+
         if args:
             union_args += args
         if kwargs:
-            fixated_kwargs.update(kwargs)
-        return func(*union_args, **fixated_kwargs)
+            union_kwargs.update(kwargs)
+        return func(*union_args, **union_kwargs)
 
     return wrapper
 
@@ -31,11 +34,15 @@ def modified_func(func, *fixated_args, **fixated_kwargs):
 fixated_args = (1, 2, 3)
 fixated_kwargs = dict(first='first_kw_arg', second='second_kw_arg')
 
-func(*fixated_args, **fixated_kwargs)
+
 
 new_func = modified_func(func, *fixated_args, **fixated_kwargs)
 
+new_func()
 new_func(404, new_arg='new_kw_arg')
+
+
+new_func()
 
 print(func.__doc__)
 print('new_func.__doc__', new_func.__doc__)
